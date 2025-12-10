@@ -36,12 +36,27 @@ def plot_observation_summary(ds):
         ax = axes[i//2, i%2]
         if var in ds.data_vars:
             data = ds[var].isel(time=0)
+            
+            # Handle 4D variables (time, lev, lat, lon) vs 3D variables (time, lat, lon)
+            if len(data.dims) == 3:  # Has vertical levels
+                # Sum across all levels to get total column observations
+                data = data.sum(dim='lev')
+                title_suffix = f'\nTotal column obs: {data.max().values:.0f}'
+            else:  # Already 2D (lat, lon)
+                title_suffix = f'\nMax obs: {data.max().values:.0f}'
+            
             # Only plot where observations exist
             data_masked = data.where(data > 0)
-            data_masked.plot(ax=ax)
-            ax.set_title(f'{name}\nMax obs: {data.max().values:.0f}')
+            
+            # Check if we have any data to plot
+            if not data_masked.isnull().all():
+                im = data_masked.plot(ax=ax, cmap='viridis', add_colorbar=True)
+                ax.set_title(f'{name}{title_suffix}')
+            else:
+                ax.set_title(f'{name}\nNo observations')
         else:
             ax.set_title(f'{name} - Not available')
+        
         ax.set_xlabel('Longitude')
         ax.set_ylabel('Latitude')
     
