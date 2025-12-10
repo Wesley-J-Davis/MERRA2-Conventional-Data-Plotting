@@ -70,27 +70,27 @@ def plot_observation_summary(ds):
             else:  # Already 2D (lat, lon)
                 title_suffix = f'\nMax obs: {data.max().values:.0f}'
                 
-            # Only plot where observations exist
-            data_masked = data.where(data > 0)
+                # Only plot where observations exist
+                data_masked = data.where(data > 0)
+                
+                # Check if we have any data to plot
+                if not data_masked.isnull().all():
+                    im = data_masked.plot(ax=ax, cmap='viridis', add_colorbar=True)
+                    ax.set_title(f'{name}{title_suffix}')
+                else:
+                    ax.set_title(f'{name}\nNo observations')
+        else:
+            ax.set_title(f'{name} - Not available')
             
-            # Check if we have any data to plot
-            if not data_masked.isnull().all():
-                im = data_masked.plot(ax=ax, cmap='viridis', add_colorbar=True)
-                ax.set_title(f'{name}{title_suffix}')
-            else:
-                ax.set_title(f'{name}\nNo observations')
-            else:
-                ax.set_title(f'{name} - Not available')
-                
-                ax.set_xlabel('Longitude')
-                ax.set_ylabel('Latitude')
-                
-                plt.tight_layout()
-                plt.show()
-                plt.savefig(base_dir + 'merra2.conv.19800101_00z.png')
-                
-                base_dir = "/discover/nobackup/projects/gmao/merra2/data/obs/.WORK/"
-                ds = xr.open_dataset(base_dir + 'products_revised/conv/d/Y1980/M01/' + 'D01/merra2.conv.19800101_00z.nc4')
-                
+            ax.set_xlabel('Longitude')
+            ax.set_ylabel('Latitude')
+            
+            plt.tight_layout()
+            plt.show()
+            plt.savefig(base_dir + 'merra2.conv.19800101_00z.png')
+            
+base_dir = "/discover/nobackup/projects/gmao/merra2/data/obs/.WORK/"
+ds = xr.open_dataset(base_dir + 'products_revised/conv/d/Y1980/M01/' + 'D01/merra2.conv.19800101_00z.nc4')
+            
 explore_data_structure(ds)
 plot_observation_summary(ds)
