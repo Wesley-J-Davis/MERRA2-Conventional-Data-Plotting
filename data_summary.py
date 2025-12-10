@@ -38,7 +38,7 @@ def plot_observation_summary(ds):
             data = ds[var].isel(time=0)
             # Only plot where observations exist
             data_masked = data.where(data > 0)
-            data_masked.plot(ax=ax, cmap='viridis')
+            data_masked.plot(ax=ax)
             ax.set_title(f'{name}\nMax obs: {data.max().values:.0f}')
         else:
             ax.set_title(f'{name} - Not available')
