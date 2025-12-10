@@ -55,9 +55,8 @@ obs_types = {
     'Drifting Buoy: Zonal wind': 'u_drift_nobs',
     'Drifting Buoy: Meridional wind': 'v_drift_nobs',
     'Drifting Buoy: Surface Pressure': 'ps_drift_nobs',
-    'GPSRO Bending Angle': 'bang_gps_nobs'
-}
-    
+    'GPSRO Bending Angle': 'bang_gps_nobs'}
+
     for i, (name, var) in enumerate(obs_types.items()):
         ax = axes[i//2, i%2]
         if var in ds.data_vars:
@@ -70,7 +69,7 @@ obs_types = {
                 title_suffix = f'\nTotal column obs: {data.max().values:.0f}'
             else:  # Already 2D (lat, lon)
                 title_suffix = f'\nMax obs: {data.max().values:.0f}'
-            
+                
             # Only plot where observations exist
             data_masked = data.where(data > 0)
             
@@ -80,18 +79,18 @@ obs_types = {
                 ax.set_title(f'{name}{title_suffix}')
             else:
                 ax.set_title(f'{name}\nNo observations')
-        else:
-            ax.set_title(f'{name} - Not available')
-        
-        ax.set_xlabel('Longitude')
-        ax.set_ylabel('Latitude')
-    
-    plt.tight_layout()
-    plt.show()
-    plt.savefig(base_dir + 'merra2.conv.19800101_00z.png')
-  
-base_dir = "/discover/nobackup/projects/gmao/merra2/data/obs/.WORK/"
-ds = xr.open_dataset(base_dir + 'products_revised/conv/d/Y1980/M01/' + 'D01/merra2.conv.19800101_00z.nc4')
-
+            else:
+                ax.set_title(f'{name} - Not available')
+                
+                ax.set_xlabel('Longitude')
+                ax.set_ylabel('Latitude')
+                
+                plt.tight_layout()
+                plt.show()
+                plt.savefig(base_dir + 'merra2.conv.19800101_00z.png')
+                
+                base_dir = "/discover/nobackup/projects/gmao/merra2/data/obs/.WORK/"
+                ds = xr.open_dataset(base_dir + 'products_revised/conv/d/Y1980/M01/' + 'D01/merra2.conv.19800101_00z.nc4')
+                
 explore_data_structure(ds)
 plot_observation_summary(ds)
