@@ -125,7 +125,7 @@ def plot_observation_summary(ds):
         
         plt.tight_layout()
         plt.show()
-        plt.savefig(base_dir + f'{platform_name}_merra2.conv.19800101_00z.png}')
+        plt.savefig(base_dir + f'{platform_name}_merra2.conv.19800101_00z.png')
             
 base_dir = "/discover/nobackup/projects/gmao/merra2/data/obs/.WORK/"
 ds = xr.open_dataset(base_dir + 'products_revised/conv/d/Y1980/M01/' + 'D01/merra2.conv.19800101_00z.nc4')
