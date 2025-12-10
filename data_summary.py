@@ -20,7 +20,7 @@ def explore_data_structure(ds):
         if total_obs > 0:
             print(f"  {var}: {total_obs:.0f} total observations")
 
-def plot_observation_summary_by_platform(ds):
+def plot_observation_summary(ds):
     """Plot observations grouped by platform/instrument"""
     
     platform_groups = {
