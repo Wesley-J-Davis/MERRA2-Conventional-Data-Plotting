@@ -1,3 +1,10 @@
+#!/usr/local/other/GEOSpyD/24.3.0-0/2024-08-29/envs/py3.11/bin/python
+
+import xarray as xr
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import numpy as np
+
 def explore_data_structure(ds):
     """Explore the data structure and basic statistics"""
     print("Dataset dimensions:")
