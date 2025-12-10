@@ -20,6 +20,13 @@ def explore_data_structure(ds):
         if total_obs > 0:
             print(f"  {var}: {total_obs:.0f} total observations")
 
+def get_short_title(name):
+    """Extract a short title from observation name"""
+    if ": " in name:
+        return name.split(": ", 1)[1]  # Split only at first occurrence
+    else:
+        return name
+
 def plot_observation_summary(ds):
     """Plot observations grouped by platform/instrument"""
     
@@ -74,13 +81,19 @@ def plot_observation_summary(ds):
         fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 5*n_rows))
         fig.suptitle(f'{platform_name} OBSERVATIONS', fontsize=16, fontweight='bold')
         
-        # Handle single row case
-        if n_rows == 1:
+        # Handle single row case and ensure axes is always 2D
+        if n_rows == 1 and n_cols == 1:
+            axes = np.array([[axes]])
+        elif n_rows == 1:
             axes = axes.reshape(1, -1)
+        elif n_cols == 1:
+            axes = axes.reshape(-1, 1)
+        
         axes_flat = axes.flatten()
         
         for i, (name, var) in enumerate(obs_types.items()):
             ax = axes_flat[i]
+            short_title = get_short_title(name)
             
             if var in ds.data_vars:
                 data = ds[var].isel(time=0)
@@ -97,11 +110,11 @@ def plot_observation_summary(ds):
                 if not data_masked.isnull().all():
                     im = data_masked.plot(ax=ax, cmap='viridis', add_colorbar=True, 
                                         cbar_kwargs={'shrink': 0.8})
-                    ax.set_title(f'{name.split(": ")[1]}{title_suffix}', fontsize=10)
+                    ax.set_title(f'{short_title}{title_suffix}', fontsize=10)
                 else:
-                    ax.set_title(f'{name.split(": ")[1]}\nNo observations', fontsize=10)
+                    ax.set_title(f'{short_title}\nNo observations', fontsize=10)
             else:
-                ax.set_title(f'{name.split(": ")[1]}\nNot available', fontsize=10)
+                ax.set_title(f'{short_title}\nNot available', fontsize=10)
             
             ax.set_xlabel('Longitude')
             ax.set_ylabel('Latitude')
