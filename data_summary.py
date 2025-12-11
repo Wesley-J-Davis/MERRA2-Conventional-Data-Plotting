@@ -14,7 +14,7 @@ def explore_data_structure(ds):
     print(f"Time: {len(ds.time)} time step(s)")
     
     print("\nAvailable observation types:")
-    obs_vars = [var for var in ds.data_vars if '_nobs' in var]
+    obs_vars = [var for var in ds.data_vars if '_nobs' in var or 'obrate' in var]
     for var in obs_vars:
         total_obs = ds[var].isel(time=0).sum().values
         if total_obs > 0:
@@ -32,44 +32,74 @@ def plot_observation_summary(ds):
     
     platform_groups = {
         'RADIOSONDE': {
-            'RADIOSONDE: Virtual temperature': 'tv_raob_nobs',
-            'RADIOSONDE: Specific humidity': 'qv_raob_nobs',
-            'RADIOSONDE: Zonal wind': 'u_raob_nobs',
-            'RADIOSONDE: Meridional wind': 'v_raob_nobs',
-            'RADIOSONDE: Surface pressure': 'ps_raob_nobs'
+            'RADIOSONDE: Virtual temperature (nobs)': 'tv_raob_nobs',
+            'RADIOSONDE: Virtual temperature (obrate)': 'tv_raob_obrate',
+            'RADIOSONDE: Specific humidity (nobs)': 'qv_raob_nobs',
+            'RADIOSONDE: Specific humidity (obrate)': 'qv_raob_obrate',
+            'RADIOSONDE: Zonal wind (nobs)': 'u_raob_nobs',
+            'RADIOSONDE: Zonal wind (obrate)': 'u_raob_obrate',
+            'RADIOSONDE: Meridional wind (nobs)': 'v_raob_nobs',
+            'RADIOSONDE: Meridional wind (obrate)': 'v_raob_obrate',
+            'RADIOSONDE: Surface pressure (nobs)': 'ps_raob_nobs',
+            'RADIOSONDE: Surface pressure (obrate)': 'ps_raob_obrate'
         },
         'AIRCRAFT': {
-            'AIRCRAFT: Virtual temperature': 'tv_acraft_nobs',
-            'AIRCRAFT: Specific humidity': 'qv_acraft_nobs',
-            'AIRCRAFT: Zonal wind': 'u_acraft_nobs',
-            'AIRCRAFT: Meridional wind': 'v_acraft_nobs'
+            'AIRCRAFT: Virtual temperature (nobs)': 'tv_acraft_nobs',
+            'AIRCRAFT: Virtual temperature (obrate)': 'tv_acraft_obrate',
+            'AIRCRAFT: Specific humidity (nobs)': 'qv_acraft_nobs',
+            'AIRCRAFT: Specific humidity (obrate)': 'qv_acraft_obrate',
+            'AIRCRAFT: Zonal wind (nobs)': 'u_acraft_nobs',
+            'AIRCRAFT: Zonal wind (obrate)': 'u_acraft_obrate',
+            'AIRCRAFT: Meridional wind (nobs)': 'v_acraft_nobs',
+            'AIRCRAFT: Meridional wind (obrate)': 'v_acraft_obrate'
         },
         'SATELLITE': {
-            'SCATTEROMETER: Zonal wind': 'u_scat_nobs',
-            'SCATTEROMETER: Meridional wind': 'v_scat_nobs',
-            'SSMI: Wind speed': 'w_ssmi_nobs',
-            'ATMOS MOTION VECTORS: Zonal wind': 'u_amv_nobs',
-            'ATMOS MOTION VECTORS: Meridional wind': 'v_amv_nobs',
-            'GPSRO Bending Angle': 'bang_gps_nobs'
+            'SCATTEROMETER: Zonal wind (nobs)': 'u_scat_nobs',
+            'SCATTEROMETER: Zonal wind (obrate)': 'u_scat_obrate',
+            'SCATTEROMETER: Meridional wind (nobs)': 'v_scat_nobs',
+            'SCATTEROMETER: Meridional wind (obrate)': 'v_scat_obrate',
+            'SSMI: Wind speed (nobs)': 'w_ssmi_nobs',
+            'SSMI: Wind speed (obrate)': 'w_ssmi_obrate',
+            'ATMOS MOTION VECTORS: Zonal wind (nobs)': 'u_amv_nobs',
+            'ATMOS MOTION VECTORS: Zonal wind (obrate)': 'u_amv_obrate',
+            'ATMOS MOTION VECTORS: Meridional wind (nobs)': 'v_amv_nobs',
+            'ATMOS MOTION VECTORS: Meridional wind (obrate)': 'v_amv_obrate',
+            'GPSRO Bending Angle (nobs)': 'bang_gps_nobs',
+            'GPSRO Bending Angle (obrate)': 'bang_gps_obrate'
         },
         'SURFACE': {
-            'SEA SURFACE: Sea surface temperature': 'sst_sea_nobs',
-            'SEA SURFACE: Virtual temperature': 'tv_sea_nobs',
-            'SEA SURFACE: Surface pressure': 'ps_sea_nobs',
-            'SEA SURFACE: Zonal wind': 'u_sea_nobs',
-            'SEA SURFACE: Meridional wind': 'v_sea_nobs',
-            'SEA SURFACE: Specific humidity': 'qv_sea_nobs',
-            'LAND SURFACE: Surface pressure': 'ps_land_nobs'
+            'SEA SURFACE: Sea surface temperature (nobs)': 'sst_sea_nobs',
+            'SEA SURFACE: Sea surface temperature (obrate)': 'sst_sea_obrate',
+            'SEA SURFACE: Virtual temperature (nobs)': 'tv_sea_nobs',
+            'SEA SURFACE: Virtual temperature (obrate)': 'tv_sea_obrate',
+            'SEA SURFACE: Surface pressure (nobs)': 'ps_sea_nobs',
+            'SEA SURFACE: Surface pressure (obrate)': 'ps_sea_obrate',
+            'SEA SURFACE: Zonal wind (nobs)': 'u_sea_nobs',
+            'SEA SURFACE: Zonal wind (obrate)': 'u_sea_obrate',
+            'SEA SURFACE: Meridional wind (nobs)': 'v_sea_nobs',
+            'SEA SURFACE: Meridional wind (obrate)': 'v_sea_obrate',
+            'SEA SURFACE: Specific humidity (nobs)': 'qv_sea_nobs',
+            'SEA SURFACE: Specific humidity (obrate)': 'qv_sea_obrate',
+            'LAND SURFACE: Surface pressure (nobs)': 'ps_land_nobs',
+            'LAND SURFACE: Surface pressure (obrate)': 'ps_land_obrate'
         },
         'OTHER': {
-            'PROFILER: Zonal wind': 'u_prof_nobs',
-            'PROFILER: Meridional wind': 'v_prof_nobs',
-            'PAOB SURFACE: Synthetic surface pressure': 'ps_paob_nobs',
-            'Drifting Buoy: Virtual Temperature': 'tv_drift_nobs',
-            'MLS: Virtual Temperature': 'tv_mls_nobs',
-            'Drifting Buoy: Zonal wind': 'u_drift_nobs',
-            'Drifting Buoy: Meridional wind': 'v_drift_nobs',
-            'Drifting Buoy: Surface Pressure': 'ps_drift_nobs'
+            'PROFILER: Zonal wind (nobs)': 'u_prof_nobs',
+            'PROFILER: Zonal wind (obrate)': 'u_prof_obrate',
+            'PROFILER: Meridional wind (nobs)': 'v_prof_nobs',
+            'PROFILER: Meridional wind (obrate)': 'v_prof_obrate',
+            'PAOB SURFACE: Synthetic surface pressure (nobs)': 'ps_paob_nobs',
+            'PAOB SURFACE: Synthetic surface pressure (obrate)': 'ps_paob_obrate',
+            'Drifting Buoy: Virtual Temperature (nobs)': 'tv_drift_nobs',
+            'Drifting Buoy: Virtual Temperature (obrate)': 'tv_drift_obrate',
+            'MLS: Virtual Temperature (nobs)': 'tv_mls_nobs',
+            'MLS: Virtual Temperature (obrate)': 'tv_mls_obrate',
+            'Drifting Buoy: Zonal wind (nobs)': 'u_drift_nobs',
+            'Drifting Buoy: Zonal wind (obrate)': 'u_drift_obrate',
+            'Drifting Buoy: Meridional wind (nobs)': 'v_drift_nobs',
+            'Drifting Buoy: Meridional wind (obrate)': 'v_drift_obrate',
+            'Drifting Buoy: Surface Pressure (nobs)': 'ps_drift_nobs',
+            'Drifting Buoy: Surface Pressure (obrate)': 'ps_drift_obrate'
         }
     }
     
