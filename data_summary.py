@@ -108,7 +108,7 @@ def plot_observation_summary(ds):
         n_cols = 3
         n_rows = (n_plots + n_cols - 1) // n_cols
         
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 5*n_rows))
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(18, 5*n_rows))
         fig.suptitle(f'{platform_name} OBSERVATIONS', fontsize=16, fontweight='bold')
         
         # Handle single row case and ensure axes is always 2D
@@ -153,12 +153,12 @@ def plot_observation_summary(ds):
         for i in range(len(obs_types), len(axes_flat)):
             axes_flat[i].set_visible(False)
         
-        plt.tight_layout()
+        plt.subplots_adjust(wspace=0.4, hspace=0.5, top=0.9)
         plt.show()
         plt.savefig(base_dir + f'{platform_name}_merra2.conv.19800101_00z.png')
             
 base_dir = "/discover/nobackup/projects/gmao/merra2/data/obs/.WORK/"
-ds = xr.open_dataset(base_dir + 'products_revised/conv/d/Y1980/M01/' + 'D01/merra2.conv.19800101_00z.nc4')
+ds = xr.open_dataset(base_dir + 'products_revised/conv/d/Y1980/M02/' + 'merra2.conv.198002.nc4')
             
 explore_data_structure(ds)
 plot_observation_summary(ds)
